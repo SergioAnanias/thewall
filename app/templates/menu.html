@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <style>
+        * {
+            margin: 0%;
+            padding: 0%;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        nav {
+            height: 5vh;
+            top: 0;
+            width: 100%;
+            position: fixed;
+            overflow: hidden;
+            background-color: grey;
+            z-index: 3;
+        }
+
+        #nav-title {
+            color: white;
+            position: absolute;
+            height : 60%;
+            width: 10%;
+            background-color: black;
+            text-align: center;
+            margin-top: 0.5em;
+            padding-top: 0.2em;
+            border-radius: 10px;
+            margin-left: 10px;
+            list-style: none;
+            color: white;
+        }
+
+        #nav-tittle:hover {
+            cursor: pointer;
+            background-color: black;
+            box-shadow: 10px 10px 10px rgba(226, 226, 226, 0.719);
+            padding-top: 0.4rem;
+            border-radius: 10px;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+
+        #nav-links {
+            right: 0;
+            position: absolute;
+            display: flex;
+            list-style: none;
+            color: white;
+            width: 35%;
+            height: 100%;
+        }
+
+        #nav-links a {
+            background-color: black;
+            height: 60%;
+            width: 100%;
+            text-align: center;
+            margin-top: 0.5em;
+            padding-top: 0.2em;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+
+        #nav-links a:hover {
+            cursor: pointer;
+            background-color: black;
+            box-shadow: 10px 10px 10px rgba(226, 226, 226, 0.719);
+            padding-top: 0.4rem;
+            border-radius: 10px;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+
+
+        #nav-links a li {
+            font-size: 1em;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+
+    <body>
+        <nav>
+            <ul id="nav-title">
+                <a href="/wall"><li>The Wall</li></a>
+            </ul>
+            <ul id="nav-links">
+                <a href="/" id="indexnav">
+                    <li>Inicio</li>
+                </a>
+                {% if not request.session.user %}
+                <a href="/login" id="loginnav">
+                    <li>Login</li>
+                </a>
+                <a href="/register" id="registernav">
+                    <li>Registro</li>
+                </a>
+                {% endif %}
+                {% if request.session.user %}
+                <a href="/logout">
+                    <li>Logout</li>
+                </a> 
+                {% endif %}
+                {% if request.session.user %}
+                <li style="width:100%">{{ usuario.first_names }}</li>
+                {% endif %}
+            </ul>
+        </nav>
+    </body>
+
+</html>

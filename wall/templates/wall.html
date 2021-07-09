@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block titulo %}La muralla{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<h2 class="text-center"> Bienvenido {{ usuario.first_names }} al muro</h2>
+
+<form id="message" method="POST"> {% csrf_token %}
+    <div class="form-group">
+        <label for="newmessage" class="h5">Escriba un nuevo mensaje</label>
+        <textarea class="form-control" id="newmessage" name="post" rows="3" style="resize:none"></textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default btn-primary">Submit</button>
+    </div>
+</form>
+
+<div id="messages">
+
+</div>
+
+{% for message in posts reversed %}
+
+<strong>{{ message.user.first_names }} {{ message.user.last_names }} </strong>
+
+<p> {{ message.message }}</p>
+
+<ul>
+    {% for comment in message.comments.all %}
+    <li class="offset-2" style="list-style-type: none;"><strong>{{ comment.user.first_names }} {{ comment.user.last_names }}</strong>
+        <p>{{comment.comment}}</p>
+    </li>
+    {% endfor %}
+<div id="comments{{ message.id }}">
+
+</div>
+    <form class="newcomment offset-4" id='{{ message.id }}' method="POST">{% csrf_token %}
+        <div class="form-group row">
+            <label for="comment" class="h6 col-12">Escriba un nuevo mensaje</label>
+            <textarea class="form-control col-4" id="comment{{message.id}}" name="cont" rows="1"
+                style="resize:none"></textarea>
+            <input type="hidden" name="post" value="{{ message.id }}">
+            <button type="submit" class="btn btn-sm btn-secondary" >Submit</button>
+        </div>
+    </form>
+</ul>
+{% endfor %}
+
+
+<script>
+    // Comenzar a comentar acá si quiere apagar el AJAX
+    // Función AJAX para crear nuevos POSTS
+    document.getElementById('message').addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        let form = new FormData(document.getElementById('message'))
+        fetch("/wall/newpost", {
+            method: "POST",
+            body: form,
+            headers: {
+                "X-CSRFToken": document.getElementsByName("csrfmiddlewaretoken")[0].defaultValue
+            }
+        }).then((data) => newdata = data.json()
+        ).then(function (data) {
+            toastr.success("Mensaje creado satisfactoriamente");
+            document.getElementById('messages').insertAdjacentHTML('afterbegin', '<strong>{{ usuario.first_names }} {{ usuario.last_names }}</strong><p>' + data.msg + '</p>');
+        }).then(function (data) {
+            document.getElementById('newmessage').value = "";
+        });
+    })// Aca termina el agregar mensajes
+    // Función AJAX para crear nuevos comentarios
+    let commentforms = document.getElementsByClassName('newcomment')
+    for (var i = 0; i < commentforms.length; i++){
+        commentforms[i].addEventListener('submit', newcomment) // Aca termina el agregar comentarios
+    }
+    function newcomment(ev) {
+            ev.preventDefault();
+            let form = new FormData(document.getElementById(ev.target.id))
+            fetch("/wall/newcomment", {
+                method: "POST",
+                body: form,
+                headers: {
+                    "X-CSRFToken": document.getElementsByName("csrfmiddlewaretoken")[0].defaultValue
+                }
+            }).then((data) => newdata = data.json()
+            ).then(function (data) {
+                toastr.success("Comentario creado satisfactoriamente");
+                document.getElementById('comments'+form.get('post')).insertAdjacentHTML('beforeend', '<li class="offset-2" style="list-style-type: none;"><strong>{{ usuario.first_names }} {{ usuario.last_names }}</strong><p>' + data.comment + '</p></li>');
+            }
+            ).then(function(){
+                document.getElementById('comment'+form.get('post')).value = "";
+            })
+        }
+</script>
+
+{% endblock %}
