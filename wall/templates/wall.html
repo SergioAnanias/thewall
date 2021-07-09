@@ -11,7 +11,6 @@
 
 
 <h2 class="text-center"> Bienvenido {{ usuario.first_names }} al muro</h2>
-
 <form id="message" method="POST"> {% csrf_token %}
     <div class="form-group">
         <label for="newmessage" class="h5">Escriba un nuevo mensaje</label>
@@ -73,10 +72,11 @@
         });
     })// Aca termina el agregar mensajes
     // Función AJAX para crear nuevos comentarios
-    let commentforms = document.getElementsByClassName('newcomment')
-    for (var i = 0; i < commentforms.length; i++) {
-        commentforms[i].addEventListener('submit', newcomment) // Aca termina el agregar comentarios
+    let commentforms = document.getElementsByClassName('newcomment');
+    for(var i = 0; i < commentforms.length; i++) {
+        commentforms[i].addEventListener('submit', newcomment); // Aca termina el agregar comentarios
     }
+
     function newcomment(ev) {
         ev.preventDefault();
         let form = new FormData(document.getElementById(ev.target.id))
@@ -95,5 +95,5 @@
             document.getElementById('comment' + form.get('post')).value = "";
         })
     }
-
+</script>
 {% endblock %}
