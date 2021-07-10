@@ -79,7 +79,7 @@
 
     function newcomment(ev) {
         ev.preventDefault();
-        let form = new FormData(document.getElementById(ev.target.id))
+        let form = new FormData(document.getElementById(this.id))
         fetch("/wall/newcomment", {
             method: "POST",
             body: form,
